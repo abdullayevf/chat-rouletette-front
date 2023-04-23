@@ -1,4 +1,11 @@
-<script setup></script>
+<script setup>
+import { decodeCredential } from 'vue3-google-login';
+
+const callback = (res) => {
+  const userData = decodeCredential(res.credential);
+  console.log("Handle the userData", userData);
+};
+</script>
 
 <template>
   <div
@@ -6,7 +13,7 @@
   >
     <form class="register-form bg-white rounded border p-4 w-[400px]">
       <div class="flex flex-col items-center mt-3 mb-5 text-center titles">
-        <img class="mb-4 w-14" src="../assets/icons/videochat.png" alt="logo">
+        <img class="mb-4 w-14" src="../assets/icons/videochat.png" alt="logo" />
         <h1 class="text-2xl font-bold text-blue-500 form-title">
           Welcome to VideoCHAT
         </h1>
@@ -16,7 +23,7 @@
       <div class="mt-4 middle-group">
         <p class="mb-3 font-semibold title">Register with:</p>
         <div class="space-y-3 buttons">
-          <button
+          <!-- <button
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-black rounded register-options"
           >
             Google
@@ -25,7 +32,9 @@
               src="../assets/icons/google.png"
               alt="google"
             /></button
-          ><button
+          > -->
+          <GoogleLogin :callback="callback" />
+          <button
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#2787F5] bg-[#2787F5] text-white rounded register-options"
           >
             VKontakte
