@@ -15,7 +15,7 @@ let isToken = computed(() => {
 
 <template>
   <main>
-    <TheRegister v-if="isToken" />
+    <TheRegister v-if="!isToken" />
     <TheScreens></TheScreens>
     
   </main>
