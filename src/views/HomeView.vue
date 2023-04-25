@@ -4,6 +4,7 @@ import TheRegister from "../components/TheRegister.vue";
 import Cookie from "js-cookie";
 import TheScreens from "../components/TheScreens.vue";
 import TheReport from "../components/TheReport.vue";
+import TheCountries from "../components/TheCountries.vue";
 import { ref } from "vue";
 
 const reportVisible = ref(false);
@@ -23,12 +24,19 @@ let isToken = computed(() => {
 
 <template>
   <main>
-    <TheReport @closeReport="toggleReport" v-if="reportVisible" />
-    <TheRegister v-if="!isToken" />
-    <TheScreens @toggleReportEvent="toggleReport"></TheScreens>
+    <transition name="fade" mode="out-in">
+      <TheReport @closeReport="toggleReport" v-if="reportVisible" />
+    </transition>
+    <transition name="fade" mode="out-in">
+      <TheRegister v-if="isToken" />
+    </transition>
+    <transition name="fade" mode="out-in">
+      <TheScreens @toggleReportEvent="toggleReport"></TheScreens>
+    </transition>
+    <transition name="fade" mode="out-in">
+      <TheCountries></TheCountries>
+    </transition>
   </main>
 </template>
 
-<style>
-
-</style>
+<style></style>

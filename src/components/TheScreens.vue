@@ -7,6 +7,10 @@ import {
 } from "@heroicons/vue/24/solid";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { ref } from "vue";
+import TheCountries from "./TheCountries.vue";
+import { useSearchPartner } from "../stores/index";
+
+const searchPartnerStore = useSearchPartner();
 
 const isMute = ref(false);
 const volume = ref(23);
@@ -73,18 +77,39 @@ const toggleSound = () => {
       <div
         class="flex flex-col items-center flex-1 gap-2 p-2 space-x-1 text-2xl font-medium md:flex-row functions-left"
       >
-        <button class="flex-1 w-full h-full bg-blue-400 rounded-md">
+        <button
+          :disabled="searchPartnerStore.loading"
+          class="flex-1 w-full h-full bg-blue-400 rounded-md disabled:bg-gray-400"
+        >
           Старт
         </button>
-        <button class="flex-1 w-full h-full bg-red-400 rounded-md">Стоп</button>
         <button
-          class="flex items-center justify-center flex-1 w-full h-full space-x-2 bg-gray-200 rounded-md"
+          :disabled="searchPartnerStore.loading"
+          class="flex-1 w-full h-full bg-red-400 rounded-md disabled:bg-gray-400"
         >
-          <p>Страна:</p>
-          <span class="fi fi-uz"></span>
+          Стоп
         </button>
-        <button class="flex-1 w-full h-full bg-gray-200 rounded-md">
-          Пол: 🧑
+        <button
+          :disabled="searchPartnerStore.loading"
+          @click="searchPartnerStore.toggleCountrySearch(true)"
+          class="flex items-center justify-center flex-1 w-full h-full space-x-2 bg-gray-200 rounded-md disabled:bg-gray-400"
+        >
+          <p v-if="searchPartnerStore.loading">Загрузка...</p>
+          <p v-else class="flex items-center">
+            Cтрана:
+            <img
+              class="ml-2"
+              :src="`https://flagcdn.com/w40/${searchPartnerStore.country.toLowerCase()}.webp`"
+              alt=""
+            />
+          </p>
+        </button>
+        <button
+          @click="searchPartnerStore.toggleGender()"
+          :disabled="searchPartnerStore.loading"
+          class="flex-1 w-full h-full bg-gray-200 rounded-md disabled:bg-gray-400"
+        >
+          Пол: {{ searchPartnerStore.gender === "male" ? "🙍🏻‍♂️" : "🙍🏻‍♀️" }}
         </button>
       </div>
 
@@ -107,6 +132,7 @@ const toggleSound = () => {
         </div>
       </div>
     </div>
+    <TheCountries />
   </div>
 </template>
 

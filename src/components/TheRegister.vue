@@ -1,9 +1,15 @@
 <script setup>
-import { decodeCredential } from 'vue3-google-login';
+import { auth } from "../http/index";
 
-const callback = (res) => {
-  const userData = decodeCredential(res.credential);
-  console.log("Handle the userData", userData);
+const login = async (service) => {
+  try {
+    const res = await auth.get(`/${service}/login`);
+    const data = await res.data;
+
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 
@@ -11,7 +17,7 @@ const callback = (res) => {
   <div
     class="fixed inset-0 z-50 flex flex-col items-center justify-center h-screen bg-black register-comp bg-opacity-70"
   >
-    <form class="register-form bg-white rounded border p-4 w-[400px]">
+    <form @submit.prevent="" class="register-form bg-white rounded border p-4 w-[400px]">
       <div class="flex flex-col items-center mt-3 mb-5 text-center titles">
         <img class="mb-4 w-14" src="../assets/icons/videochat.png" alt="logo" />
         <h1 class="text-2xl font-bold text-blue-500 form-title">
@@ -23,7 +29,8 @@ const callback = (res) => {
       <div class="mt-4 middle-group">
         <p class="mb-3 font-semibold title">Register with:</p>
         <div class="space-y-3 buttons">
-          <!-- <button
+          <button
+          @click="login('google')"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-black rounded register-options"
           >
             Google
@@ -31,10 +38,10 @@ const callback = (res) => {
               class="w-5 ml-2"
               src="../assets/icons/google.png"
               alt="google"
-            /></button
-          > -->
-          <GoogleLogin :callback="callback" />
+            />
+          </button>
           <button
+          @click="login('vk')"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#2787F5] bg-[#2787F5] text-white rounded register-options"
           >
             VKontakte
@@ -43,7 +50,8 @@ const callback = (res) => {
               src="../assets/icons/vk.png"
               alt="vk"
             /></button
-          ><button
+          ><a
+            href="http://45.147.177.43:3000/api/auth/yandex/login" 
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#ffcc00] rounded bg-[#ffcc00] text-white register-options"
           >
             Yandex
@@ -52,7 +60,7 @@ const callback = (res) => {
               src="../assets/icons/yandex.png"
               alt="yandex"
             />
-          </button>
+        </a>
         </div>
       </div>
     </form>

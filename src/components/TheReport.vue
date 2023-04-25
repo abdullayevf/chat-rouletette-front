@@ -1,10 +1,22 @@
 <script setup>
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { ref } from "vue";
+import html2canvas from "html2canvas";
 
 const reportVisible = ref(false);
+const image = ref();
 
 const emits = defineEmits(["closeReport"]);
+
+const target = document.body;
+
+const capture = () => {
+  html2canvas(target).then((canvas) => {
+    image.value.src = canvas.toDataURL("image/jpeg");
+  });
+};
+
+capture();
 
 const toggleReport = () => {
   reportVisible.value = false;
@@ -45,7 +57,7 @@ const toggleReport = () => {
           <div class="flex space-x-4 form-screenshot">
             <p class="font-semibold text-md">Скриншот:</p>
             <div class="scrrenshot">
-              <img src="../assets/screenshot.svg" alt="screenshot" />
+              <img ref="image" alt="screenshot" />
             </div>
           </div>
           <div class="flex space-x-4 form-description">
