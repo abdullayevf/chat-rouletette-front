@@ -10,6 +10,7 @@ const login = async (service) => {
   } catch (error) {
     console.log(error);
   }
+
 };
 </script>
 
@@ -17,7 +18,10 @@ const login = async (service) => {
   <div
     class="fixed inset-0 z-50 flex flex-col items-center justify-center h-screen bg-black register-comp bg-opacity-70"
   >
-    <form @submit.prevent="" class="register-form bg-white rounded border p-4 w-[400px]">
+    <form
+      @submit.prevent=""
+      class="register-form bg-white rounded border p-4 w-[400px]"
+    >
       <div class="flex flex-col items-center mt-3 mb-5 text-center titles">
         <img class="mb-4 w-14" src="../assets/icons/videochat.png" alt="logo" />
         <h1 class="text-2xl font-bold text-blue-500 form-title">
@@ -30,7 +34,7 @@ const login = async (service) => {
         <p class="mb-3 font-semibold title">Register with:</p>
         <div class="space-y-3 buttons">
           <button
-          @click="login('google')"
+            @click="login('google')"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-black rounded register-options"
           >
             Google
@@ -41,7 +45,7 @@ const login = async (service) => {
             />
           </button>
           <button
-          @click="login('vk')"
+            @click="login('vk')"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#2787F5] bg-[#2787F5] text-white rounded register-options"
           >
             VKontakte
@@ -50,8 +54,8 @@ const login = async (service) => {
               src="../assets/icons/vk.png"
               alt="vk"
             /></button
-          ><a
-            href="http://45.147.177.43:3000/api/auth/yandex/login" 
+          ><button
+            @click="login('yandex')"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#ffcc00] rounded bg-[#ffcc00] text-white register-options"
           >
             Yandex
@@ -60,7 +64,7 @@ const login = async (service) => {
               src="../assets/icons/yandex.png"
               alt="yandex"
             />
-        </a>
+          </button>
         </div>
       </div>
     </form>

@@ -9,6 +9,7 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { ref } from "vue";
 import TheCountries from "./TheCountries.vue";
 import { useSearchPartner } from "../stores/index";
+import { socket, state } from "../socket";
 
 const searchPartnerStore = useSearchPartner();
 
@@ -49,7 +50,7 @@ const toggleSound = () => {
           <!-- should be binded  -->
           <button @click="toggleSound()" class="">
             <SpeakerWaveIcon
-              v-if="!isMute"
+              v-if="!isMute"  
               class="w-6 h-6 transition fill-gray-400 hover:fill-white"
             ></SpeakerWaveIcon>
             <SpeakerXMarkIcon
@@ -78,10 +79,11 @@ const toggleSound = () => {
         class="flex flex-col items-center flex-1 gap-2 p-2 space-x-1 text-2xl font-medium md:flex-row functions-left"
       >
         <button
+          @click="socket.connect()"
           :disabled="searchPartnerStore.loading"
           class="flex-1 w-full h-full bg-blue-400 rounded-md disabled:bg-gray-400"
         >
-          Старт
+          {{ state.connected ? "Connected" : "Старт" }}
         </button>
         <button
           :disabled="searchPartnerStore.loading"
