@@ -18,6 +18,7 @@ const isMute = ref(false);
 const volume = ref(23);
 const reportVisible = ref(false);
 const emojisVisible = ref(false);
+const message = ref('')
 
 const emits = defineEmits(["toggleReportEvent"]);
 
@@ -36,7 +37,7 @@ const toggleSound = () => {
 };
 
 const handleEvent = (e) => {
-  console.log(e);
+  message.value += e
 };
 
 const toggleEmojiVisibility = () => {
@@ -127,7 +128,9 @@ const toggleEmojiVisibility = () => {
 
       <div class="relative flex flex-1 gap-2 m-2 bg-white rounded-md">
         <div class="w-full chat">
-          <div class="chat_msgs"></div>
+          <div class="chat_msgs">
+            <p>{{ message }}</p>
+          </div>
           <hr />
           <div class="absolute bottom-0 flex w-full p-2 border-t-2 chat_text">
             <input
@@ -136,6 +139,7 @@ const toggleEmojiVisibility = () => {
               id="chat_text"
               class="flex-1 outline-none"
               placeholder="Введите сюда текст сообщения и нажмите Enter"
+              v-model="message"
             />
             <FaceSmileIcon
               @click="toggleEmojiVisibility"
