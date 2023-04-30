@@ -1,16 +1,13 @@
 <script setup>
 import { auth } from "../http/index";
-
 const login = async (service) => {
   try {
     const res = await auth.get(`/${service}/login`);
     const data = await res.data;
-
     console.log(data);
   } catch (error) {
     console.log(error);
   }
-
 };
 </script>
 
@@ -82,7 +79,6 @@ const login = async (service) => {
   .register-form {
     width: 100%;
   }
-
   .register-comp {
     padding: 0 15px;
   }

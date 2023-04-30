@@ -10,12 +10,14 @@ import { ref } from "vue";
 import TheCountries from "./TheCountries.vue";
 import { useSearchPartner } from "../stores/index";
 import { socket, state } from "../socket";
+import TheEmojiPicker from "./TheEmojiPicker.vue";
 
 const searchPartnerStore = useSearchPartner();
 
 const isMute = ref(false);
 const volume = ref(23);
 const reportVisible = ref(false);
+const emojisVisible = ref(false);
 
 const emits = defineEmits(["toggleReportEvent"]);
 
@@ -31,6 +33,14 @@ const toggleSound = () => {
     volume.value = 100;
   }
   isMute.value = !isMute.value;
+};
+
+const handleEvent = (e) => {
+  console.log(e);
+};
+
+const toggleEmojiVisibility = () => {
+  emojisVisible.value = !emojisVisible.value;
 };
 </script>
 <template>
@@ -50,7 +60,7 @@ const toggleSound = () => {
           <!-- should be binded  -->
           <button @click="toggleSound()" class="">
             <SpeakerWaveIcon
-              v-if="!isMute"  
+              v-if="!isMute"
               class="w-6 h-6 transition fill-gray-400 hover:fill-white"
             ></SpeakerWaveIcon>
             <SpeakerXMarkIcon
@@ -128,8 +138,10 @@ const toggleSound = () => {
               placeholder="Введите сюда текст сообщения и нажмите Enter"
             />
             <FaceSmileIcon
+              @click="toggleEmojiVisibility"
               class="w-8 h-8 cursor-pointer fill-gray-300"
             ></FaceSmileIcon>
+            <TheEmojiPicker v-if="emojisVisible" @emoji_click="handleEvent" />
           </div>
         </div>
       </div>
