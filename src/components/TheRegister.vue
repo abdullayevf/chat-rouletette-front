@@ -1,13 +1,15 @@
 <script setup>
 import { auth } from "../http/index";
-const login = async (service) => {
+import { decodeCredential, googleTokenLogin } from "vue3-google-login";
+import { useSearchPartner } from "../stores";
+
+const store = useSearchPartner();
+
+const googleLogin = async () => {
   try {
-    const res = await auth.get(`/${service}/login`);
-    const data = await res.data;
-    console.log(data);
-  } catch (error) {
-    console.log(error);
-  }
+    const userData = await googleTokenLogin();
+    console.log(JSON.stringify(userData));
+  } catch (error) {}
 };
 </script>
 
@@ -31,8 +33,9 @@ const login = async (service) => {
         <p class="mb-3 font-semibold title">Register with:</p>
         <div class="space-y-3 buttons">
           <button
-            @click="login('google')"
-            class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-black rounded register-options"
+            @click="googleLogin"
+            :disabled="store.loading"
+            class="flex items-center disabled:text-gray-500 disabled:border-gray-500 disabled:cursor-not-allowed justify-center w-full py-2 text-lg font-semibold border border-black rounded register-options"
           >
             Google
             <img

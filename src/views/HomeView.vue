@@ -28,7 +28,7 @@ let isToken = computed(() => {
       <TheReport @closeReport="toggleReport" v-if="reportVisible" />
     </transition>
     <transition name="fade" mode="out-in">
-      <TheRegister v-if="isToken"></TheRegister>
+      <TheRegister v-if="!isToken"></TheRegister>
     </transition>
     <transition name="fade" mode="out-in">
       <TheScreens @toggleReportEvent="toggleReport"></TheScreens>

@@ -8,13 +8,13 @@ export const state = reactive({
 });
 
 const URL = `http://45.147.177.43:3000/`;
-export const socket = io(URL)
+export const socket = {}
 
-socket.on("connect", (err) => {
-  console.log('connected');
-  state.connected = true;
-});
+// socket.on("connect", (err) => {
+//   console.log('connected');
+//   state.connected = true;
+// });
 
-socket.on("disconnect", () => {
-  state.connected = false;
-});
+// socket.on("disconnect", () => {
+//   state.connected = false;
+// });
