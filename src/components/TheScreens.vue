@@ -18,7 +18,7 @@ const isMute = ref(false);
 const volume = ref(23);
 const reportVisible = ref(false);
 const emojisVisible = ref(false);
-const message = ref('')
+const message = ref("");
 
 const emits = defineEmits(["toggleReportEvent"]);
 
@@ -37,7 +37,7 @@ const toggleSound = () => {
 };
 
 const handleEvent = (e) => {
-  message.value += e
+  message.value += e;
 };
 
 const toggleEmojiVisibility = () => {
