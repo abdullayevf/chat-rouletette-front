@@ -107,7 +107,7 @@ const yandexLogin = async () => {
     <div class="my-4 text-center text-white texts">
       <p>Я подтверждаю, что мне уже исполнилось 18 лет.</p>
       <p>
-        Я принимаю <a class="underline" href="#">Пользовательское соглашение</a>
+        Я принимаю <router-link class="underline" to="/loading">Пользовательское соглашение</router-link>
       </p>
     </div>
   </div>
