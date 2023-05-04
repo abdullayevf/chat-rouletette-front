@@ -7,8 +7,6 @@ import axios from "axios";
 const YANDEX_ID = import.meta.env.VITE_YANDEX_ID;
 const YANDEX_REDIRECT = import.meta.env.VITE_YANDEX_REDIRECT;
 
-console.log(YANDEX_ID);
-
 const store = useSearchPartner();
 
 const googleLogin = async () => {
