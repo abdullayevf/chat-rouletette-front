@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from "vue";
 import axios from "axios";
-import { useSearchPartner } from "./stores/index";
+import { useSearchPartner } from "./stores/searchPartner";
 import Cookies from "js-cookie";
 
 const searchPartner = useSearchPartner();
@@ -11,16 +11,16 @@ onMounted(async () => {
     return;
   } else {
     try {
-      searchPartner.setLoading(true);
+      await searchPartner.setLoading(true);
       const res = await axios.get(
         "https://api.ipgeolocation.io/ipgeo?apiKey=1c9dee18518d4b55becc6cee7bf6ccf8"
       );
       const data = await res.data;
 
       searchPartner.setCountry(data.country_code2);
-      searchPartner.setLoading(false);
+      await searchPartner.setLoading(false);
     } catch (error) {
-      searchPartner.setLoading(false);
+      await searchPartner.setLoading(false);
     }
   }
 });

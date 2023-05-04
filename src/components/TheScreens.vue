@@ -8,7 +8,7 @@ import {
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { ref } from "vue";
 import TheCountries from "./TheCountries.vue";
-import { useSearchPartner } from "../stores/index";
+import { useSearchPartner } from "../stores/searchPartner";
 import { socket, state } from "../socket";
 import TheEmojiPicker from "./TheEmojiPicker.vue";
 

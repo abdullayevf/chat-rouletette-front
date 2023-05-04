@@ -1,7 +1,7 @@
 <script setup>
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/vue/24/solid";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import { useSearchPartner } from "../stores/index";
+import { useSearchPartner } from "../stores/searchPartner";
 import countries from "../storage/countries.json";
 import { ref } from "vue";
 import { computed } from "@vue/reactivity";

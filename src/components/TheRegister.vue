@@ -1,15 +1,52 @@
 <script setup>
 import { auth } from "../http/index";
-import { decodeCredential, googleTokenLogin } from "vue3-google-login";
-import { useSearchPartner } from "../stores";
+import { googleTokenLogin } from "vue3-google-login";
+import { useSearchPartner } from "../stores/searchPartner";
+import axios from "axios";
+
+const YANDEX_ID = import.meta.env.VITE_YANDEX_ID;
+const YANDEX_REDIRECT = import.meta.env.VITE_YANDEX_REDIRECT;
 
 const store = useSearchPartner();
 
 const googleLogin = async () => {
+  store.setLoading(true);
   try {
     const userData = await googleTokenLogin();
-    console.log(JSON.stringify(userData));
-  } catch (error) {}
+    const sendUserData = await auth.get("/google/redirect", {
+      data: { ...userData },
+    });
+
+    console.log(userData);
+    console.log(sendUserData);
+    store.setLoading(false);
+  } catch (error) {
+    store.setLoading(false);
+    console.log(error);
+  }
+};
+
+const yandexLogin = async () => {
+  try {
+    await store.setLoading(true);
+
+    window.open(
+      `https://oauth.yandex.com/authorize?response_type=code&client_id=${YANDEX_ID}&redirect_uri=${YANDEX_REDIRECT}`,
+      "targetWindow",
+      `toolbar=no,
+                                    location=no,
+                                    status=no,
+                                    menubar=no,
+                                    scrollbars=yes,
+                                    resizable=yes,
+                                    width=SomeSize,
+                                    height=SomeSize`
+    ).addEventListener('close', () => {
+      
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 
@@ -45,7 +82,6 @@ const googleLogin = async () => {
             />
           </button>
           <button
-            @click="login('vk')"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#2787F5] bg-[#2787F5] text-white rounded register-options"
           >
             VKontakte
@@ -55,7 +91,7 @@ const googleLogin = async () => {
               alt="vk"
             /></button
           ><button
-            @click="login('yandex')"
+            @click="yandexLogin"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#ffcc00] rounded bg-[#ffcc00] text-white register-options"
           >
             Yandex

@@ -17,7 +17,7 @@ export const useSearchPartner = defineStore("searchPartner", () => {
     Cookies.set("country", c);
   };
 
-  const setLoading = (v) => {
+  const setLoading = async (v) => {
     loading.value = v;
   };
 
