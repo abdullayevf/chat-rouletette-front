@@ -1,28 +1,10 @@
 <script setup>
-import { auth } from "../http/index";
 import { useSearchPartner } from "../stores/searchPartner";
 import { useGoogleLogin } from "../composables/useGoogleLogin";
 
-const {googleLogin} = useGoogleLogin()
-
-const YANDEX_ID = import.meta.env.VITE_YANDEX_ID;
-const YANDEX_REDIRECT = import.meta.env.VITE_YANDEX_REDIRECT;
+const { googleLogin } = useGoogleLogin();
 
 const store = useSearchPartner();
-
-const yandexLogin = async () => {
-  try {
-    await store.setLoading(true);
-
-    window.open(
-      `https://oauth.yandex.com/authorize?response_type=code&client_id=${YANDEX_ID}&redirect_uri=${YANDEX_REDIRECT}`,
-      "targetWindow",
-      `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=SomeSize,height=SomeSize`
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
 </script>
 
 <template>
@@ -66,7 +48,6 @@ const yandexLogin = async () => {
               alt="vk"
             /></button
           ><button
-            @click="yandexLogin"
             class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#ffcc00] rounded bg-[#ffcc00] text-white register-options"
           >
             Yandex
@@ -90,6 +71,13 @@ const yandexLogin = async () => {
     </div>
   </div>
 </template>
+
+/** const yandexLogin = async () => { try { await store.setLoading(true);
+window.open(
+`https://oauth.yandex.com/authorize?response_type=code&client_id=${YANDEX_ID}&redirect_uri=${YANDEX_REDIRECT}`,
+"targetWindow",
+`toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=SomeSize,height=SomeSize`
+); } catch (error) { console.log(error); } }; */
 
 <style scoped>
 @media (max-width: 437px) {
