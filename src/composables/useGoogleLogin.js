@@ -8,7 +8,8 @@ export const useGoogleLogin = () => {
   const searchPartner = useSearchPartner();
   const userStore = useUserStore();
 
-  console.log(import.meta.env);
+  console.log(import.meta.env); 
+  // wow
 
   const options = {
     client_id: import.meta.env.VITE_GOOGLE_APP,
