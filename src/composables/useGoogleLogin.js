@@ -8,6 +8,8 @@ export const useGoogleLogin = () => {
   const searchPartner = useSearchPartner();
   const userStore = useUserStore();
 
+  console.log(import.meta.env);
+
   const options = {
     client_id: import.meta.env.VITE_GOOGLE_APP,
     redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT,
