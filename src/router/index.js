@@ -21,6 +21,11 @@ const router = createRouter({
       component: () => import("../views/YandexView.vue"),
     },
     {
+      path: "/google",
+      name: "google",
+      component: () => import("../views/GoogleView.vue"),
+    },
+    {
       path: "/loading",
       name: "loading",
       component: () => import("../views/LoadingView.vue"),

@@ -1,30 +1,14 @@
 <script setup>
 import { auth } from "../http/index";
-import { googleTokenLogin } from "vue3-google-login";
 import { useSearchPartner } from "../stores/searchPartner";
-import axios from "axios";
+import { useGoogleLogin } from "../composables/useGoogleLogin";
+
+const {googleLogin} = useGoogleLogin()
 
 const YANDEX_ID = import.meta.env.VITE_YANDEX_ID;
 const YANDEX_REDIRECT = import.meta.env.VITE_YANDEX_REDIRECT;
 
 const store = useSearchPartner();
-
-const googleLogin = async () => {
-  store.setLoading(true);
-  try {
-    const userData = await googleTokenLogin();
-    const sendUserData = await auth.get("/google/redirect", {
-      data: { ...userData },
-    });
-
-    console.log(userData);
-    console.log(sendUserData);
-    store.setLoading(false);
-  } catch (error) {
-    store.setLoading(false);
-    console.log(error);
-  }
-};
 
 const yandexLogin = async () => {
   try {
@@ -33,17 +17,8 @@ const yandexLogin = async () => {
     window.open(
       `https://oauth.yandex.com/authorize?response_type=code&client_id=${YANDEX_ID}&redirect_uri=${YANDEX_REDIRECT}`,
       "targetWindow",
-      `toolbar=no,
-                                    location=no,
-                                    status=no,
-                                    menubar=no,
-                                    scrollbars=yes,
-                                    resizable=yes,
-                                    width=SomeSize,
-                                    height=SomeSize`
-    ).addEventListener('close', () => {
-      
-    });
+      `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=SomeSize,height=SomeSize`
+    );
   } catch (error) {
     console.log(error);
   }
@@ -107,7 +82,10 @@ const yandexLogin = async () => {
     <div class="my-4 text-center text-white texts">
       <p>Я подтверждаю, что мне уже исполнилось 18 лет.</p>
       <p>
-        Я принимаю <router-link class="underline" to="/loading">Пользовательское соглашение</router-link>
+        Я принимаю
+        <router-link class="underline" to="/loading"
+          >Пользовательское соглашение</router-link
+        >
       </p>
     </div>
   </div>
