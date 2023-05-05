@@ -14,7 +14,7 @@ const toggleReport = (e) => {
 };
 
 let isToken = computed(() => {
-  if (Cookie.get("token")) {
+  if (Cookie.get("accessToken") && Cookie.get("user")) {
     return true;
   } else {
     return false;

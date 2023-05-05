@@ -36,13 +36,20 @@ export const useGoogleLogin = () => {
     try {
       await searchPartner.setLoading(true);
 
-      window.open(
+      const openedWindow = window.open(
         fullUrl.value,
         "targetWindow",
         `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=SomeSize,height=SomeSize`
       );
 
-      await searchPartner.setLoading(false);
+      let timer = setInterval(() => {
+        if (openedWindow.closed) {
+          window.location.reload();
+          clearInterval(timer);
+        } else {
+          return;
+        }
+      }, 700);
     } catch (error) {
       await searchPartner.setLoading(false);
       console.log(error);
@@ -91,9 +98,9 @@ export const useGoogleLogin = () => {
 
       // set token which is from server (not from google)
       await userStore.setToken(
-        "accessToken",
         response.data.access_token,
-        response.data.expires
+        response.data.expires,
+        "acc"
       );
 
       // update user info again
@@ -102,6 +109,8 @@ export const useGoogleLogin = () => {
       await searchPartner.setLoading(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      window.close();
     }
   };
 

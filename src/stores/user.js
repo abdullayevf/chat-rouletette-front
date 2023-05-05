@@ -3,13 +3,14 @@ import { defineStore } from "pinia";
 import Cookies from "js-cookie";
 
 export const useUserStore = defineStore("userStore", () => {
-  const user = reactive(
-    Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {}
-  );
-  const token = ref("");
+  const user = reactive({
+    details: Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {},
+    accessToken: Cookies.get("accessToken") ? "accessToken" : "",
+    refreshToken: Cookies.get("refreshToken") ? "refreshToken" : "",
+  });
 
   async function setUser(payload) {
-    user = payload;
+    user.details = payload;
     if (Cookies.get("user")) {
       Cookies.remove("user");
       Cookies.set("user", JSON.stringify(payload));
@@ -19,26 +20,35 @@ export const useUserStore = defineStore("userStore", () => {
   }
 
   async function updateUser(key, value) {
-    user[key] = value;
+    user.details[key] = value;
 
     Cookies.remove("user");
-    Cookies.set("user", user);
+    Cookies.set("user", JSON.stringify(user));
   }
 
-  async function setToken(payload, exp) {
-    token = payload;
-    if (Cookies.get("accessToken")) {
-      Cookies.remove("accessToken");
-      Cookies.set("accessToken", payload, { expires: exp });
+  async function setToken(payload, exp, type) {
+    if (type === "acc") {
+      user.accessToken = payload;
+      if (Cookies.get("accessToken")) {
+        Cookies.remove("accessToken");
+        Cookies.set("accessToken", payload, { expires: exp });
+      } else {
+        Cookies.set("accessToken", payload);
+      }
     } else {
-      Cookies.set("accessToken", payload);
+      user.refreshToken = payload;
+      if (Cookies.get("refreshToken")) {
+        Cookies.remove("refreshToken");
+        Cookies.set("refreshToken", payload, { expires: exp });
+      } else {
+        Cookies.set("refreshToken", payload);
+      }
     }
   }
 
   return {
     user,
     setUser,
-    token,
     setToken,
     updateUser,
   };
