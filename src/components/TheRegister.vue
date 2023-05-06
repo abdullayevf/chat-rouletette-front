@@ -1,8 +1,10 @@
 <script setup>
 import { useSearchPartner } from "../stores/searchPartner";
 import { useGoogleLogin } from "../composables/useGoogleLogin";
+import { useYandexLogin } from "../composables/useYandexLogin";
 
 const { googleLogin } = useGoogleLogin();
+const { yandexLogin } = useYandexLogin();
 
 const store = useSearchPartner();
 </script>
@@ -39,7 +41,8 @@ const store = useSearchPartner();
             />
           </button>
           <button
-            class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#2787F5] bg-[#2787F5] text-white rounded register-options"
+            :disabled="store.loading"
+            class="flex items-center justify-center w-full py-2 text-lg disabled:border-gray-500 disabled:bg-gray-500 disabled:cursor-not-allowed font-semibold border border-[#2787F5] bg-[#2787F5] text-white rounded register-options"
           >
             VKontakte
             <img
@@ -48,7 +51,9 @@ const store = useSearchPartner();
               alt="vk"
             /></button
           ><button
-            class="flex items-center justify-center w-full py-2 text-lg font-semibold border border-[#ffcc00] rounded bg-[#ffcc00] text-white register-options"
+            @click="yandexLogin"
+            :disabled="store.loading"
+            class="flex items-center justify-center w-full py-2 text-lg font-semibold border disabled:border-gray-500 disabled:bg-gray-500 disabled:cursor-not-allowed border-[#ffcc00] rounded bg-[#ffcc00] text-white register-options"
           >
             Yandex
             <img

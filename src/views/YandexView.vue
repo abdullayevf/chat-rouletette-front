@@ -1,31 +1,27 @@
 <script setup>
-import { useUserStore } from "../stores/user";
-import { reactive, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import axios from "axios";
+import { onMounted } from "vue";
+import { useYandexLogin } from "../composables/useYandexLogin";
+import { useSearchPartner } from "../stores/searchPartner";
 
-const router = useRouter();
-const route = useRoute();
-const store = useUserStore();
+const searchPartner = useSearchPartner()
+
+const { getUserData } = useYandexLogin();
 
 onMounted(async () => {
-  try {
-    const code = route.query.code;
-    const res = await axios.post(
-      `https://oauth.yandex.ru/token?grant_type=authorization_code&code=${code}&client_id=${
-        import.meta.env.VITE_YANDEX_ID
-      }&client_secret=${import.meta.env.VITE_YANDEX_SECRET}`
-    );
-
-    console.log(res);
-  } catch (error) {
-    console.log(error);
-  }
+  await getUserData();
 });
 </script>
 
 <template>
-  <div class="logging-in text-center w-full pt-8 text-xl font-semibold">
-    Загрузка...
+  <div class="loading-page h-screen flex flex-col items-center justify-center">
+    <div v-if="searchPartner.loading">
+      <h1
+        class="title text-xl font-bold flex flex-col items-center justify-center"
+      >
+        Загрузка...
+      </h1>
+      <p class="description">Ваша информация обрабатывается...</p>
+    </div>
+    <div v-else>Завершенный!</div>
   </div>
 </template>

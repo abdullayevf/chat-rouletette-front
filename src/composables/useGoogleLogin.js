@@ -1,4 +1,4 @@
-import { ref, computed, reactive } from "vue";
+import { computed, reactive } from "vue";
 import { auth } from "../http/index";
 import { useSearchPartner } from "../stores/searchPartner";
 import { useUserStore } from "../stores/user";
@@ -108,8 +108,12 @@ export const useGoogleLogin = () => {
 
       await searchPartner.setLoading(false);
     } catch (error) {
+      await searchPartner.setLoading(false);
       console.log(error);
-    } 
+    } finally {
+      await searchPartner.setLoading(false);
+      window.close();
+    }
   };
 
   return {
