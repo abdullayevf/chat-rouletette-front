@@ -110,7 +110,10 @@ export const useGoogleLogin = () => {
     } catch (error) {
       await searchPartner.setLoading(false);
       console.log(error);
-    } 
+    } finally {
+      await searchPartner.setLoading(false);
+      window.close()
+    }
   };
 
   return {
