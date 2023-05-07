@@ -9,7 +9,7 @@ const { getUserData } = useGoogleLogin();
 
 onMounted(async () => {
   await getUserData();
-});
+});     
 </script>
 
 <template>
