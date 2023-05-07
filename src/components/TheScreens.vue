@@ -95,7 +95,7 @@ const toggleEmojiVisibility = () => {
           @click="
             findNewRoom(
               searchPartnerStore.gender,
-              searchPartnerStore.country,
+              4,
               JSON.parse(jsCookie.get(`user`)).details.userId
             )
           "

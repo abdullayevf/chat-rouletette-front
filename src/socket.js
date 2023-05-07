@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
+import Cookies from "js-cookie";
 
 export const state = reactive({
   connected: false,
@@ -9,7 +10,11 @@ export const state = reactive({
   searching: false,
 });
 const URL = `http://api.chat-roulet.ru/`;
-export const socket = io(URL);
+export const socket = io(URL, {
+  extraHeaders: {
+    Authorization: `Bearer ${Cookies.get("accessToken")}`,
+  },
+});
 
 socket.on("connect", (s) => {
   console.log("connected");
@@ -21,15 +26,16 @@ socket.on("disconnect", () => {
 });
 
 export const findNewRoom = (gender, country, userId) => {
-  socket.emit("findRoom", { gender, country, userId });
-
+  socket.emit("findRoom", {userId, country, gender});
+  
   console.log(gender, country, userId);
-
-  socket.on('onFindRoom', (data) => {
-    console.log(data);
-    console.log('blyat');
-    console.log('data');
-  })
-
-  console.log("s");
 };
+
+socket.on("onFindRoom", (data) => {
+  console.log(data);
+});
+
+socket.on("onException", (data) => {
+  console.log(data);
+});
+

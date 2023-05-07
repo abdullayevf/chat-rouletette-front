@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export const auth = axios.create({
-  baseURL: "https://api.chat-roulet.ru/api/auth",
+  baseURL: "http://api.chat-roulet.ru/api/auth",
 });
 
 export const global = axios.create({
