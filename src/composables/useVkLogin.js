@@ -70,7 +70,7 @@ export const useVkLogin = () => {
 
       // send request to get userinfo
       const user = await axios.get(
-        `${getUserUrl}?access_token=${result.value.access_token}&user_ids=${result.value.user_id}`,
+        `${getUserUrl}?access_token=${result.value.access_token}&user_ids=${result.value.user_id}v=5.131`,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
