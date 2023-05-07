@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import axios from "axios";
 import { useSearchPartner } from "./stores/searchPartner";
 import Cookies from "js-cookie";
-
+  
 const searchPartner = useSearchPartner();
 
 onMounted(async () => {

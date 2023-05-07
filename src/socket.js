@@ -5,16 +5,31 @@ export const state = reactive({
   connected: false,
   fooEvents: [],
   barEvents: [],
+  inRoom: false,
+  searching: false,
+});
+const URL = `http://api.chat-roulet.ru/`;
+export const socket = io(URL);
+
+socket.on("connect", (s) => {
+  console.log("connected");
+  state.connected = true;
 });
 
-const URL = `http://45.147.177.43:3000/`;
-export const socket = {}
+socket.on("disconnect", () => {
+  state.connected = false;
+});
 
-// socket.on("connect", (err) => {
-//   console.log('connected');
-//   state.connected = true;
-// });
+export const findNewRoom = (gender, country, userId) => {
+  socket.emit("findRoom", { gender, country, userId });
 
-// socket.on("disconnect", () => {
-//   state.connected = false;
-// });
+  console.log(gender, country, userId);
+
+  socket.on('onFindRoom', (data) => {
+    console.log(data);
+    console.log('blyat');
+    console.log('data');
+  })
+
+  console.log("s");
+};

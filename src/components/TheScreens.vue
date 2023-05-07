@@ -9,10 +9,13 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { ref } from "vue";
 import TheCountries from "./TheCountries.vue";
 import { useSearchPartner } from "../stores/searchPartner";
-import { socket, state } from "../socket";
+import { useUserStore } from "../stores/user";
+import { state, findNewRoom } from "../socket";
 import TheEmojiPicker from "./TheEmojiPicker.vue";
+import jsCookie from "js-cookie";
 
 const searchPartnerStore = useSearchPartner();
+const userStore = useUserStore();
 
 const isMute = ref(false);
 const volume = ref(23);
@@ -26,7 +29,6 @@ const toggleReport = () => {
   reportVisible.value = !reportVisible.value;
   emits("toggleReportEvent", reportVisible.value);
 };
-
 const toggleSound = () => {
   if (!isMute.value) {
     volume.value = 0;
@@ -90,14 +92,22 @@ const toggleEmojiVisibility = () => {
         class="flex flex-col items-center flex-1 gap-2 p-2 space-x-1 text-2xl font-medium md:flex-row functions-left"
       >
         <button
-          @click="socket.connect()"
-          :disabled="searchPartnerStore.loading"
+          @click="
+            findNewRoom(
+              searchPartnerStore.gender,
+              searchPartnerStore.country,
+              JSON.parse(jsCookie.get(`user`)).details.userId
+            )
+          "
+          :disabled="searchPartnerStore.loading || state.inRoom"
           class="flex-1 w-full h-full bg-blue-400 rounded-md disabled:bg-gray-400"
         >
-          {{ state.connected ? "Connected" : "Старт" }}
+          {{ state.inRoom ? "Cоединенный" : "Старт" }}
         </button>
         <button
-          :disabled="searchPartnerStore.loading"
+          :disabled="
+            searchPartnerStore.loading || !state.inRoom || state.searching
+          "
           class="flex-1 w-full h-full bg-red-400 rounded-md disabled:bg-gray-400"
         >
           Стоп
