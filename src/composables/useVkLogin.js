@@ -3,7 +3,7 @@ import { auth } from "../http/index";
 import { useSearchPartner } from "../stores/searchPartner";
 import { useUserStore } from "../stores/user";
 import axios from "axios";
-import { VKAPI } from "vkontakte-api";
+
 
 export const useVkLogin = () => {
   // important urls to access user's info
@@ -69,11 +69,19 @@ export const useVkLogin = () => {
         }, {});
       });
 
-      const api = new VKAPI({ accessToken: result.value.access_token });
+      // send request to get userinfo
+      const user = await axios.get(
+        `${getUserUrl}?access_token=${result.value.access_token}&user_ids=${result.value.user_id}&v=5.131`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
 
-      api.users
-        .get({ user_ids: [result.value.user_ids] })
-        .then((r) => console.log(r));
+      const data = await user.data;
+
+      console.log(data);
       // // making userinfo object
       // const userInfo = reactive({
       //   username: username.value,
