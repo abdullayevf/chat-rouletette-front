@@ -2,9 +2,11 @@
 import { useSearchPartner } from "../stores/searchPartner";
 import { useGoogleLogin } from "../composables/useGoogleLogin";
 import { useYandexLogin } from "../composables/useYandexLogin";
+import { useVkLogin } from "../composables/useVkLogin";
 
 const { googleLogin } = useGoogleLogin();
 const { yandexLogin } = useYandexLogin();
+const { vkLogin } = useVkLogin();
 
 const store = useSearchPartner();
 </script>
@@ -41,6 +43,7 @@ const store = useSearchPartner();
             />
           </button>
           <button
+            @click="vkLogin"
             :disabled="store.loading"
             class="flex items-center justify-center w-full py-2 text-lg disabled:border-gray-500 disabled:bg-gray-500 disabled:cursor-not-allowed font-semibold border border-[#2787F5] bg-[#2787F5] text-white rounded register-options"
           >

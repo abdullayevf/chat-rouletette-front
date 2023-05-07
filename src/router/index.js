@@ -26,6 +26,11 @@ const router = createRouter({
       component: () => import("../views/GoogleView.vue"),
     },
     {
+      path: "/vk",
+      name: "vkontakte",
+      component: () => import('../views/VkView.vue')
+    },
+    {
       path: "/loading",
       name: "loading",
       component: () => import("../views/LoadingView.vue"),
