@@ -1,9 +1,11 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import Cookies from "js-cookie";
+import countries from "../storage/countries.json";
 
 export const useSearchPartner = defineStore("searchPartner", () => {
   const country = ref(Cookies.get("country") || "");
+  const countryIndex = ref(Cookies.get("countryIndex" || 0));
   const gender = ref(Cookies.get("gender") || "");
   const showCountrySearch = ref(false);
   const loading = ref(false);
@@ -15,6 +17,25 @@ export const useSearchPartner = defineStore("searchPartner", () => {
   const setCountry = (c) => {
     country.value = c;
     Cookies.set("country", c);
+  };
+
+  const setCountryIndex = (c) => {
+    countryIndex.value = c;
+    Cookies.set("countryIndex", c);
+  };
+
+  const getCountryIndexAndSet = (alpha) => {
+    const foundIndex = countries.findIndex((i) => i.alpha1 === alpha);
+
+    setCountryIndex(foundIndex);
+
+    return foundIndex;
+  };
+
+  const findCountryByIndex = (index) => {
+    const country = countries[index];
+
+    return country;
   };
 
   const setLoading = async (v) => {
@@ -47,5 +68,9 @@ export const useSearchPartner = defineStore("searchPartner", () => {
     loading,
     setLoading,
     toggleGender,
+    findCountryByIndex,
+    setCountryIndex,
+    getCountryIndexAndSet,
+    countryIndex
   };
 });

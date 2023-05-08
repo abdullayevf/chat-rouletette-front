@@ -26,7 +26,7 @@ socket.on("disconnect", () => {
 });
 
 export const findNewRoom = (gender, country, userId) => {
-  socket.emit("findRoom", {userId, country, gender});
+  socket.emit("joinToQueue", {userId, country, gender});
   
   console.log(gender, country, userId);
 };

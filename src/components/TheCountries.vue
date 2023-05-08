@@ -55,7 +55,7 @@ const setCountry = (code) => {
                 v-if="
                   country.name !== 'name' &&
                   country.name !== 'Абхазия' &&
-                  country.name !== 'Южная Осетия'
+                  country.name !== 'Южная Осетия' 
                 "
                 class="flex items-center justify-center font-semibold w-full p-2 my-2 bg-gray-100 rounded transition hover:bg-gray-200"
               >

@@ -3,12 +3,13 @@ import { onMounted } from "vue";
 import axios from "axios";
 import { useSearchPartner } from "./stores/searchPartner";
 import Cookies from "js-cookie";
-  
+import countries from "./storage/countries.json";
+
 const searchPartner = useSearchPartner();
 
 onMounted(async () => {
   if (Cookies.get("country")) {
-    return;
+     return;
   } else {
     try {
       await searchPartner.setLoading(true);
@@ -18,6 +19,7 @@ onMounted(async () => {
       const data = await res.data;
 
       searchPartner.setCountry(data.country_code2);
+      searchPartner.getCountryIndexAndSet(data.country_code2);
       await searchPartner.setLoading(false);
     } catch (error) {
       await searchPartner.setLoading(false);

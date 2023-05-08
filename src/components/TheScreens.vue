@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from "vue";
 import {
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
@@ -81,7 +82,6 @@ const toggleEmojiVisibility = () => {
           />
         </div>
       </div>
-
       <div
         class="bg-black relative max-h-[682px] xl:h-[640px] xl:aspect-auto aspect-square screen_second"
       ></div>
@@ -95,7 +95,7 @@ const toggleEmojiVisibility = () => {
           @click="
             findNewRoom(
               searchPartnerStore.gender,
-              4,
+              Number(searchPartnerStore.countryIndex),
               JSON.parse(jsCookie.get(`user`)).details.userId
             )
           "
