@@ -10,7 +10,7 @@ export const useYandexLogin = () => {
     import.meta.env.VITE_YANDEX_ID
   }`;
   const getUserUrl = `https://login.yandex.ru/info?format=json`;
-
+ 
   const searchPartner = useSearchPartner();
   const userStore = useUserStore();
 
