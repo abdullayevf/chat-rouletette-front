@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive, ref, computed } from "vue";
+import peer from "peerjs"
 
 export const useChatStore = defineStore("chat-store", () => {
   const peerConnection = ref(null);
