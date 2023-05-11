@@ -15,7 +15,7 @@ export const useUserStore = defineStore("userStore", () => {
       Cookies.remove("user");
       Cookies.set("user", JSON.stringify(payload));
     } else {
-      Cookies.set("user", JSON.stringify(payload));
+      Cookies.set("user", JSON.stringify(payload))
     }
   }
 
