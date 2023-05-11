@@ -9,7 +9,7 @@ const searchPartner = useSearchPartner();
 
 onMounted(async () => {
   if (Cookies.get("country")) {
-     return;
+    return;
   } else {
     try {
       await searchPartner.setLoading(true);

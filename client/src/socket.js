@@ -8,6 +8,7 @@ export const state = reactive({
   barEvents: [],
   inRoom: false,
   searching: false,
+  loading: false,
 });
 const URL = `http://api.chat-roulet.ru/`;
 export const socket = io(URL, {
@@ -37,18 +38,24 @@ const findRoomEvent = async (data) => {
 };
 
 export const findNewRoom = async (data) => {
+  state.loading = true;
+  state.searching = true;
   await joinToQueueEvent(data.userId);
   await findRoomEvent(data);
 };
 
-socket.on("onFindRoom", (data) => {
+socket.on("onFindRoom", async (data) => {
+  state.loading = false;
+  state.searching = false;
   console.log(data);
 });
 
-socket.on("onJoinToQueue", (data) => {
+socket.on("onJoinToQueue", async (data) => {
   console.log(data);
 });
 
-socket.on("onException", (data) => {
+socket.on("onException", async (data) => {
+  state.searching = false;
+  state.loading = false;
   console.log(data);
 });

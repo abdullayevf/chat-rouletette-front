@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive } from "vue";
+import { reactive, onMounted } from "vue";
 import {
   SpeakerWaveIcon,
   SpeakerXMarkIcon,
@@ -10,11 +10,13 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 import { ref } from "vue";
 import TheCountries from "./TheCountries.vue";
 import { useSearchPartner } from "../stores/searchPartner";
+import { useChatStore } from "../stores/chat";
 import { useUserStore } from "../stores/user";
 import { state, findNewRoom } from "../socket";
 import TheEmojiPicker from "./TheEmojiPicker.vue";
 import Cookies from "js-cookie";
 
+const chatStore = useChatStore();
 const searchPartnerStore = useSearchPartner();
 const userStore = useUserStore();
 
@@ -23,6 +25,8 @@ const volume = ref(23);
 const reportVisible = ref(false);
 const emojisVisible = ref(false);
 const message = ref("");
+const localStremRef = ref(null);
+const remoteStreamRef = ref(null);
 
 const emits = defineEmits(["toggleReportEvent"]);
 
@@ -30,6 +34,7 @@ const toggleReport = () => {
   reportVisible.value = !reportVisible.value;
   emits("toggleReportEvent", reportVisible.value);
 };
+
 const toggleSound = () => {
   if (!isMute.value) {
     volume.value = 0;
@@ -54,13 +59,27 @@ const findRoomArgs = reactive({
     ? JSON.parse(Cookies.get("user")).details.userId
     : "",
 });
+
+onMounted(async () => {
+  if (Cookies.get("accessToken") && Cookies.get("user")) {
+    await chatStore.init();
+    localStremRef.value.srcObject = chatStore.localStrem;
+    console.log(localStremRef.value.srcObject);
+  } else {
+    return
+  }
+});
 </script>
 <template>
   <div class="wrapper">
     <div class="top-0 grid w-full grid-cols-2 screens">
       <div
-        class="max-h-[682px] relative xl:h-[640px] xl:aspect-auto aspect-square screen_first bg-gray-600"
+        class="max-h-[682px] relative xl:h-[740px] xl:aspect-auto aspect-square screen_first bg-gray-600"
       >
+        <video
+          ref="remoteStreamRef"
+          class="w-full h-full object-cover z-[99999]"
+        ></video>
         <ExclamationCircleIcon
           @click="toggleReport"
           class="absolute hidden w-8 h-8 transition-all opacity-50 cursor-pointer report-icon fill-white hover:opacity-100 top-4 right-4"
@@ -91,8 +110,15 @@ const findRoomArgs = reactive({
         </div>
       </div>
       <div
-        class="bg-black relative max-h-[682px] xl:h-[640px] xl:aspect-auto aspect-square screen_second"
-      ></div>
+        class="relative max-h-[682px] xl:h-[740px] xl:aspect-auto aspect-square screen_second"
+      >
+        <video
+          autoplay
+          muted
+          ref="localStremRef"
+          class="w-full h-full object-cover z-[99999]"
+        ></video>
+      </div>
     </div>
 
     <div class="flex w-full functions h-[100vh - 682px]">
@@ -101,25 +127,30 @@ const findRoomArgs = reactive({
       >
         <button
           @click="findNewRoom(findRoomArgs)"
-          :disabled="searchPartnerStore.loading || state.inRoom"
+          :disabled="
+            state.loading || state.inRoom || searchPartnerStore.loading
+          "
           class="flex-1 w-full h-full bg-blue-400 rounded-md disabled:bg-gray-400"
         >
           {{ state.inRoom ? "Cоединенный" : "Старт" }}
         </button>
         <button
           :disabled="
-            searchPartnerStore.loading || !state.inRoom || state.searching
+            state.loading ||
+            !state.inRoom ||
+            state.searching ||
+            searchPartnerStore.loading
           "
           class="flex-1 w-full h-full bg-red-400 rounded-md disabled:bg-gray-400"
         >
           Стоп
         </button>
         <button
-          :disabled="searchPartnerStore.loading"
+          :disabled="searchPartnerStore.loading || state.loading"
           @click="searchPartnerStore.toggleCountrySearch(true)"
           class="flex items-center justify-center flex-1 w-full h-full space-x-2 bg-gray-200 rounded-md disabled:bg-gray-400"
         >
-          <p v-if="searchPartnerStore.loading">Загрузка...</p>
+          <p v-if="searchPartnerStore.loading || state.loading">Загрузка...</p>
           <p v-else class="flex items-center">
             Cтрана:
             <img
@@ -131,7 +162,7 @@ const findRoomArgs = reactive({
         </button>
         <button
           @click="searchPartnerStore.toggleGender()"
-          :disabled="searchPartnerStore.loading"
+          :disabled="searchPartnerStore.loading || state.loading"
           class="flex-1 w-full h-full bg-gray-200 rounded-md disabled:bg-gray-400"
         >
           Пол: {{ searchPartnerStore.gender === "male" ? "🙍🏻‍♂️" : "🙍🏻‍♀️" }}

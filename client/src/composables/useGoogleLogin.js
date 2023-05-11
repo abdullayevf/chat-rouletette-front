@@ -39,7 +39,7 @@ export const useGoogleLogin = () => {
       const openedWindow = window.open(
         fullUrl.value,
         "targetWindow",
-        `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=SomeSize,height=SomeSize`
+        `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=500,height=SomeSize`
       );
 
       let timer = setInterval(() => {
@@ -113,7 +113,10 @@ export const useGoogleLogin = () => {
     } catch (error) {
       await searchPartner.setLoading(false);
       console.log(error); 
-    } 
+    } finally {
+      await searchPartner.setLoading(false);
+      window.close()
+    }
   };
 
   return {
