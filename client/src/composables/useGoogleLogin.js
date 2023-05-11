@@ -97,11 +97,14 @@ export const useGoogleLogin = () => {
       const response = await auth.post(`/google-oauth`, { ...userInfo });
 
       // set token which is from server (not from google)
+      console.log(response.data.access_token);
       await userStore.setToken(
         response.data.access_token,
         response.data.expires,
         "acc"
       );
+
+      searchPartner.toggleGender()
 
       // update user info again
       await userStore.updateUser("userId", response.data.userId);

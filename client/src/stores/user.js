@@ -5,8 +5,8 @@ import Cookies from "js-cookie";
 export const useUserStore = defineStore("userStore", () => {
   const user = reactive({
     details: Cookies.get("user") ? JSON.parse(Cookies.get("user")) : {},
-    accessToken: Cookies.get("accessToken") ? "accessToken" : "",
-    refreshToken: Cookies.get("refreshToken") ? "refreshToken" : "",
+    accessToken: Cookies.get("accessToken") ? Cookies.get("accessToken") : "",
+    refreshToken: Cookies.get("refreshToken") ? Cookies.get("accessToken") : "",
   });
 
   async function setUser(payload) {
