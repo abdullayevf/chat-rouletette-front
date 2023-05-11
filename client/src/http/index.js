@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "redaxios";
 import Cookies from "js-cookie";
 
 export const auth = axios.create({

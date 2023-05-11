@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from "vue";
-import axios from "axios";
+import axios from "redaxios";
 import { useSearchPartner } from "./stores/searchPartner";
 import Cookies from "js-cookie";
 import countries from "./storage/countries.json";
