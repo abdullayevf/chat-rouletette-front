@@ -1,8 +1,8 @@
-import axios from "redaxios";
+import axios from "axios";
 import Cookies from "js-cookie";
 
 export const auth = axios.create({
-  baseURL: "https://api.chat-roulet.ru/api/auth",
+  baseURL: "http://api.chat-roulet.ru/api/auth",
 });
 
 export const universal = axios.create({

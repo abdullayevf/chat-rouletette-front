@@ -2,7 +2,7 @@ import { computed, reactive } from "vue";
 import { auth } from "../http/index";
 import { useSearchPartner } from "../stores/searchPartner";
 import { useUserStore } from "../stores/user";
-import axios from "redaxios";
+import axios from "axios";
 
 
 export const useVkLogin = () => {

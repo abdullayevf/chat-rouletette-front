@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.17",
+    "axios": "^1.4.0",
     "flag-icons": "^6.6.6",
     "html2canvas": "^1.4.1",
     "js-cookie": "^3.0.1",
@@ -17,7 +18,6 @@
     "passport-yandex-token": "^2.1.0",
     "peerjs": "^1.4.7",
     "pinia": "^2.0.32",
-    "redaxios": "^0.5.1",
     "socket.io-client": "^4.6.1",
     "vk-io": "^4.8.3",
     "vkontakte-api": "^3.0.3",

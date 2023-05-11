@@ -2,7 +2,7 @@ import { computed, reactive } from "vue";
 import { auth } from "../http/index";
 import { useSearchPartner } from "../stores/searchPartner";
 import { useUserStore } from "../stores/user";
-import axios from "redaxios";
+import axios from "axios";
 
 export const useGoogleLogin = () => {
   // important urls to access user's info
@@ -113,10 +113,7 @@ export const useGoogleLogin = () => {
     } catch (error) {
       await searchPartner.setLoading(false);
       console.log(error); 
-    } finally {
-      await searchPartner.setLoading(false);
-      window.close()
-    }
+    } 
   };
 
   return {

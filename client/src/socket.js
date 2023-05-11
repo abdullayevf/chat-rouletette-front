@@ -10,7 +10,7 @@ export const state = reactive({
   searching: false,
   loading: false,
 });
-const URL = `https://api.chat-roulet.ru/`;
+const URL = `http://api.chat-roulet.ru/`;
 export const socket = io(URL, {
   extraHeaders: {
     Authorization: `Bearer ${Cookies.get("accessToken")}`,
