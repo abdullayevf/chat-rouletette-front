@@ -25,7 +25,7 @@ const volume = ref(23);
 const reportVisible = ref(false);
 const emojisVisible = ref(false);
 const message = ref("");
-const localStremRef = ref(null);
+const localStreamRef = ref(null);
 const remoteStreamRef = ref(null);
 
 const emits = defineEmits(["toggleReportEvent"]);
@@ -63,8 +63,7 @@ const findRoomArgs = reactive({
 onMounted(async () => {
   if (Cookies.get("accessToken") && Cookies.get("user")) {
     await chatStore.init();
-    localStremRef.value.srcObject = chatStore.localStrem;
-    console.log(localStremRef.value.srcObject);
+    localStreamRef.value.srcObject = chatStore.localStream;
   } else {
     return
   }
@@ -115,7 +114,7 @@ onMounted(async () => {
         <video
           autoplay
           muted
-          ref="localStremRef"
+          ref="localStreamRef"
           class="w-full h-full object-cover z-[99999]"
         ></video>
       </div>

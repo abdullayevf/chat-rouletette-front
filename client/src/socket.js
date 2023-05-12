@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
 import Cookies from "js-cookie";
+import { useChatStore } from "./stores/chat";
 
 export const state = reactive({
   connected: false,
@@ -10,7 +11,9 @@ export const state = reactive({
   searching: false,
   loading: false,
 });
-const URL = `http://api.chat-roulet.ru/`;
+const URL = import.meta.env.DEV
+  ? import.meta.env.VITE_SERVER_HOST_DEV
+  : import.meta.env.VITE_SERVER_HOST_PROD;
 export const socket = io(URL, {
   extraHeaders: {
     Authorization: `Bearer ${Cookies.get("accessToken")}`,
@@ -18,7 +21,6 @@ export const socket = io(URL, {
 });
 
 socket.on("connect", (s) => {
-  console.log("connected");
   state.connected = true;
 });
 
@@ -28,34 +30,39 @@ socket.on("disconnect", () => {
 
 const joinToQueueEvent = async (userId) => {
   console.log("joinToQueue: ", userId);
-  return socket.emit("joinToQueue", { userId });
+  socket.emit("joinToQueue", { userId });
 };
 
 const findRoomEvent = async (data) => {
   console.log("findRoomEvent: ", data);
-
-  return socket.emit("findRoom", data);
+  socket.emit("findRoom", data);
 };
 
 export const findNewRoom = async (data) => {
   state.loading = true;
   state.searching = true;
+  
   await joinToQueueEvent(data.userId);
-  await findRoomEvent(data);
+
+  setTimeout(() => {
+    findRoomEvent(data);
+  }, 1000);
+
+  socket.on("onException", (data) => {
+    state.searching = false;
+    state.loading = false;
+    console.log(data);
+  });
 };
 
 socket.on("onFindRoom", async (data) => {
-  state.loading = false;
-  state.searching = false;
+  const chatStore = useChatStore();
+
+  await chatStore.createOffer(data.roomId)
+
   console.log(data);
 });
 
-socket.on("onJoinToQueue", async (data) => {
-  console.log(data);
-});
-
-socket.on("onException", async (data) => {
-  state.searching = false;
-  state.loading = false;
+socket.on("onJoinToQueue", (data) => {
   console.log(data);
 });
