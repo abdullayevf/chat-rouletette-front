@@ -2,6 +2,9 @@ import { reactive } from "vue";
 import { io } from "socket.io-client";
 import Cookies from "js-cookie";
 import { useChatStore } from "./stores/chat";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 export const state = reactive({
   connected: false,
@@ -39,30 +42,70 @@ const findRoomEvent = async (data) => {
 };
 
 export const findNewRoom = async (data) => {
-  state.loading = true;
-  state.searching = true;
-  
-  await joinToQueueEvent(data.userId);
+  try {
+    state.loading = true;
+    state.searching = true;
 
-  setTimeout(() => {
-    findRoomEvent(data);
-  }, 1000);
+    await joinToQueueEvent(data.userId);
 
-  socket.on("onException", (data) => {
-    state.searching = false;
+    setTimeout(() => {
+      findRoomEvent(data);
+    }, 1000);
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
     state.loading = false;
-    console.log(data);
-  });
+    state.searching = false;
+  }
 };
 
 socket.on("onFindRoom", async (data) => {
+  try {
+    // const chatStore = useChatStore();
+    // await chatStore.createOffer(data.roomId);
+    toast.success(`You connected with ${data.partner.id}`);
+
+    state.loading = false;
+    state.searching = false;
+
+    console.log(data);
+  } catch (error) {
+    state.loading = false;
+    state.searching = false;
+    console.log(error);
+    toast.error(error.message);
+  }
+});
+
+socket.on("onOffer", async (data) => {
+  try {
+    const chatStore = useChatStore();
+
+    await chatStore.createAnswer(data.offer, data.roomId);
+
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
+    state.loading = false;
+    state.searching = false;
+  }
+});
+
+socket.on("onAnswer", async (data) => {
   const chatStore = useChatStore();
 
-  await chatStore.createOffer(data.roomId)
+  await chatStore.addAnswer(data.answer);
 
   console.log(data);
 });
 
 socket.on("onJoinToQueue", (data) => {
+  console.log(data);
+});
+
+socket.on("onException", (data) => {
+  state.searching = false;
+  state.loading = false;
   console.log(data);
 });

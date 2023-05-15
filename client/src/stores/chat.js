@@ -3,9 +3,20 @@ import { reactive, ref, computed } from "vue";
 import { socket, state } from "../socket";
 
 export const useChatStore = defineStore("chat-store", () => {
-  const peerConnection = reactive(new RTCPeerConnection());
+  const peerConnection = reactive(
+    new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: [
+            "stun:stun1.l.google.com:19302",
+            "stun:stun2.l.google.com:19302",
+          ],
+        },
+      ],
+    })
+  );
   const localStream = ref(null);
-  const remoteStream = ref(null);
+  const remoteStream = ref(new MediaStream());
 
   const init = async () => {
     localStream.value = await navigator.mediaDevices.getUserMedia({
@@ -16,56 +27,38 @@ export const useChatStore = defineStore("chat-store", () => {
       audio: true,
     });
 
-    remoteStream.value = new MediaStream();
-
-    localStream.value.getTracks().forEach((track) => {
+    await localStream.value.getTracks().forEach((track) => {
       peerConnection.addTrack(track, localStream.value);
     });
 
-    peerConnection.ontrack = (event) => {
-      event.streams[0].getTracks().forEach((track) => {
+    peerConnection.ontrack = (e) => {
+      e.streams[0].getTracks().forEach((track) => {
         remoteStream.value.addTrack(track);
       });
     };
-
-    console.log(localStream.value);
   };
 
   const createOffer = async (roomId) => {
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
 
-    peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        socket.emit("offer", {
-          offer: peerConnection.localDescription,
-          roomId,
-        });
-      }
-    };
+    socket.emit("offer", { offer, roomId });
+    console.log("offer sent: ", { offer, roomId });
   };
 
-  const createAnswer = async (roomId, offer) => {
+  const createAnswer = async (offer, roomId) => {
     await peerConnection.setRemoteDescription(offer);
-    const answer = await peerConnection.createAnswer();
+
+    let answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
 
-    peerConnection.onicecandidate = async (event) => {
-      if (event.candidate) {
-        socket.emit("answer", {
-          answer: peerConnection.localDescription,
-          roomId,
-        });
-      }
-    };
+    socket.emit("answer", { answer, roomId });
+    console.log("Answer sent: ", { answer, roomId });
   };
 
   const addAnswer = async (answer) => {
-    if (!peerConnection.currentRemoteDescription) {
+    if (!peerConnection.currentLocalDescription) {
       peerConnection.setRemoteDescription(answer);
-      state.loading = false;
-      state.searching = false;
-      state.busy = true;
     }
   };
 
@@ -76,8 +69,8 @@ export const useChatStore = defineStore("chat-store", () => {
     localStream,
     remoteStream,
     peerConnection,
-    createOffer,
     disconnect,
+    createOffer,
     createAnswer,
     addAnswer,
   };
