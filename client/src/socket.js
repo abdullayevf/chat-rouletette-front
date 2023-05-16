@@ -31,25 +31,15 @@ socket.on("disconnect", () => {
   state.connected = false;
 });
 
-const joinToQueueEvent = async (userId) => {
-  console.log("joinToQueue: ", userId);
-  socket.emit("joinToQueue", { userId });
-};
-
-const findRoomEvent = async (data) => {
-  console.log("findRoomEvent: ", data);
-  socket.emit("findRoom", data);
-};
-
 export const findNewRoom = async (data) => {
   try {
     state.loading = true;
     state.searching = true;
 
-    await joinToQueueEvent(data.userId);
+    socket.emit("joinToQueue", { userId: data.userId });
 
     setTimeout(() => {
-      findRoomEvent(data);
+      socket.emit("findRoom", data);
     }, 1000);
   } catch (error) {
     console.log(error);
@@ -61,14 +51,17 @@ export const findNewRoom = async (data) => {
 
 socket.on("onFindRoom", async (data) => {
   try {
-    // const chatStore = useChatStore();
-    // await chatStore.createOffer(data.roomId);
+    const chatStore = useChatStore();
+    await chatStore.createOffer(data.roomId);
     toast.success(`You connected with ${data.partner.id}`);
+    await chatStore.updateRoom("connected", true);
+    await chatStore.updateRoom("id", data.roomId);
+    await chatStore.updateRoom("partner", data.partner.id);
 
     state.loading = false;
     state.searching = false;
 
-    console.log(data);
+    console.log(chatStore.roomDetails);
   } catch (error) {
     state.loading = false;
     state.searching = false;
@@ -108,4 +101,12 @@ socket.on("onException", (data) => {
   state.searching = false;
   state.loading = false;
   console.log(data);
+});
+
+socket.on("onNewMessage", async (data) => {
+  const chatStore = useChatStore()
+
+  await chatStore.pushMessage(data)
+
+  console.log(chatStore.messages);
 });

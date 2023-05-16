@@ -15,6 +15,7 @@ import { useUserStore } from "../stores/user";
 import { state, findNewRoom } from "../socket";
 import TheEmojiPicker from "./TheEmojiPicker.vue";
 import Cookies from "js-cookie";
+import { socket } from "../socket";
 
 const chatStore = useChatStore();
 const searchPartnerStore = useSearchPartner();
@@ -24,7 +25,7 @@ const isMute = ref(false);
 const volume = ref(23);
 const reportVisible = ref(false);
 const emojisVisible = ref(false);
-const message = ref("");
+const message = ref(null);
 const localStreamRef = ref(null);
 const remoteStreamRef = ref(null);
 
@@ -60,12 +61,28 @@ const findRoomArgs = reactive({
     : "",
 });
 
+const sendMessage = async () => {
+  console.log(`Message: `, message.value);
+  console.log(`Room: `, chatStore.roomDetails.connected);
+  if (message.value === null || !chatStore.roomDetails.connected) {
+    return;
+  } else {
+    const text = message.value;
+    const roomId = chatStore.roomDetails.id;
+    const userId = Cookies.get("user")
+      ? JSON.parse(Cookies.get("user")).details.userId
+      : "";
+    await chatStore.pushMessage({ text, roomId, userId });
+    socket.emit("newMessage", { text, userId, roomId });
+  }
+};
+
 onMounted(async () => {
   if (Cookies.get("accessToken") && Cookies.get("user")) {
     await chatStore.init();
     localStreamRef.value.srcObject = chatStore.localStream;
   } else {
-    return
+    return;
   }
 });
 </script>
@@ -168,10 +185,15 @@ onMounted(async () => {
         </button>
       </div>
 
-      <div class="relative flex flex-1 gap-2 m-2 bg-white rounded-md">
+      <form
+        @submit.prevent="sendMessage()"
+        class="relative flex flex-1 gap-2 m-2 bg-white rounded-md"
+      >
         <div class="w-full chat">
           <div class="chat_msgs">
-            <p>{{ message }}</p>
+            <p v-for="message in chatStore.messages" class="messages">
+              {{ message.text }}
+            </p>
           </div>
           <hr />
           <div class="absolute bottom-0 flex w-full p-2 border-t-2 chat_text">
@@ -190,7 +212,7 @@ onMounted(async () => {
             <TheEmojiPicker v-if="emojisVisible" @emoji_click="handleEvent" />
           </div>
         </div>
-      </div>
+      </form>
     </div>
     <TheCountries />
   </div>
